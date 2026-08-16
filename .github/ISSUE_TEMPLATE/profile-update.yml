@@ -1,0 +1,77 @@
+name: Capability profile update
+description: Report a documented or observed capability change for one target surface
+title: "profile: "
+labels:
+  - profile
+body:
+  - type: dropdown
+    id: target
+    attributes:
+      label: Target surface
+      description: Select one concrete product surface. Open separate issues for different surfaces.
+      options:
+        - Claude Code
+        - GitHub Copilot CLI
+        - GitHub Copilot cloud agent and code review
+        - Codex local host
+        - New target surface
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Product version or observation date
+      description: Provide the exact version where available, otherwise the observation date.
+    validations:
+      required: true
+
+  - type: textarea
+    id: claim
+    attributes:
+      label: Capability claim
+      description: State the smallest specific capability change being proposed.
+      placeholder: "Example: Remote OAuth authentication changed from unsupported to supported."
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Official sources
+      description: Provide official documentation, specification, schema, changelog, or source-code references.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Evidence class
+      options:
+        - Official product documentation
+        - Protocol specification
+        - Official schema or source code
+        - Executable runtime probe
+        - Controlled manual observation
+    validations:
+      required: true
+
+  - type: textarea
+    id: runtime
+    attributes:
+      label: Runtime evidence
+      description: Describe any runtime probe, artifact revision, target version, and result. State "none" when unavailable.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: discipline
+    attributes:
+      label: Evidence discipline
+      options:
+        - label: This issue concerns one concrete target surface.
+          required: true
+        - label: I have not inferred support from another client or surface.
+          required: true
+        - label: Unknown or undocumented behavior is identified as unknown.
+          required: true

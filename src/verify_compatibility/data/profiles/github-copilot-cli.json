@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "github-copilot-cli",
+  "label": "GitHub Copilot CLI",
+  "vendor": "GitHub",
+  "surface": "local-cli",
+  "reviewed_at": "2026-08-16",
+  "sources": [
+    {
+      "id": "copilot-agent-skills",
+      "title": "About agent skills",
+      "url": "https://docs.github.com/en/copilot/concepts/agents/about-agent-skills",
+      "covers": [
+        "skills",
+        "skills.discovery"
+      ]
+    },
+    {
+      "id": "copilot-cli-reference",
+      "title": "GitHub Copilot CLI command reference",
+      "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference",
+      "covers": [
+        "skills.frontmatter",
+        "mcp.features",
+        "mcp.transports",
+        "mcp.authentication"
+      ]
+    }
+  ],
+  "skills": {
+    "supported": true,
+    "discovery": {
+      "project": [
+        ".github/skills",
+        ".agents/skills",
+        ".claude/skills"
+      ],
+      "user": [
+        "~/.copilot/skills",
+        "~/.agents/skills"
+      ]
+    },
+    "frontmatter": {
+      "additional_fields": [
+        "argument-hint",
+        "user-invocable",
+        "disable-model-invocation"
+      ],
+      "unknown_field_behavior": "undocumented",
+      "allowed_tools": {
+        "status": "supported",
+        "dialect": "github-copilot-cli-permission-rules"
+      }
+    },
+    "features": {
+      "explicit-invocation": "supported",
+      "implicit-invocation": "supported"
+    },
+    "host_markers": [],
+    "adapter_files": []
+  },
+  "mcp": {
+    "features": {
+      "tools": "supported",
+      "resources": "unknown",
+      "prompts": "unknown",
+      "server-instructions": "supported",
+      "elicitation": "unknown"
+    },
+    "transports": {
+      "stdio": "supported",
+      "streamable-http": "supported",
+      "sse": "supported",
+      "websocket": "unsupported"
+    },
+    "authentication": {
+      "none": "supported",
+      "headers": "supported",
+      "bearer": "supported",
+      "oauth": "supported",
+      "oidc": "supported"
+    }
+  }
+}

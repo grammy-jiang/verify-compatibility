@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "agent-skills",
+  "label": "Agent Skills specification",
+  "reviewed_at": "2026-08-16",
+  "sources": [
+    {
+      "id": "agent-skills-specification",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification",
+      "covers": [
+        "directory",
+        "frontmatter",
+        "progressive-disclosure"
+      ]
+    }
+  ],
+  "frontmatter": {
+    "required": [
+      "name",
+      "description"
+    ],
+    "optional": [
+      "license",
+      "compatibility",
+      "metadata",
+      "allowed-tools"
+    ],
+    "constraints": {
+      "name_max_length": 64,
+      "description_max_length": 1024,
+      "compatibility_max_length": 500,
+      "recommended_file_max_lines": 500
+    }
+  }
+}

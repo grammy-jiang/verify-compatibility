@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "claude-code",
+  "label": "Claude Code",
+  "vendor": "Anthropic",
+  "surface": "local-agent",
+  "reviewed_at": "2026-08-16",
+  "sources": [
+    {
+      "id": "claude-code-skills",
+      "title": "Extend Claude with skills",
+      "url": "https://code.claude.com/docs/en/skills",
+      "covers": [
+        "skills",
+        "skills.discovery",
+        "skills.frontmatter",
+        "skills.host-markers"
+      ]
+    },
+    {
+      "id": "claude-code-mcp",
+      "title": "Connect Claude Code to tools via MCP",
+      "url": "https://code.claude.com/docs/en/mcp",
+      "covers": [
+        "mcp.features",
+        "mcp.transports",
+        "mcp.authentication"
+      ]
+    }
+  ],
+  "skills": {
+    "supported": true,
+    "discovery": {
+      "project": [
+        ".claude/skills"
+      ],
+      "user": [
+        "~/.claude/skills"
+      ]
+    },
+    "frontmatter": {
+      "additional_fields": [
+        "when_to_use",
+        "argument-hint",
+        "arguments",
+        "disable-model-invocation",
+        "user-invocable",
+        "disallowed-tools",
+        "model",
+        "effort",
+        "context",
+        "agent",
+        "background",
+        "hooks",
+        "paths",
+        "shell"
+      ],
+      "unknown_field_behavior": "undocumented",
+      "allowed_tools": {
+        "status": "supported",
+        "dialect": "claude-code-tool-patterns"
+      }
+    },
+    "features": {
+      "explicit-invocation": "supported",
+      "implicit-invocation": "supported",
+      "dynamic-context-injection": "supported",
+      "subagent-execution": "supported"
+    },
+    "host_markers": [
+      {
+        "literal": "${CLAUDE_SKILL_DIR}",
+        "feature": "skill-directory-variable"
+      },
+      {
+        "literal": "$ARGUMENTS",
+        "feature": "skill-argument-substitution"
+      }
+    ],
+    "adapter_files": []
+  },
+  "mcp": {
+    "features": {
+      "tools": "supported",
+      "resources": "supported",
+      "prompts": "supported",
+      "server-instructions": "supported",
+      "elicitation": "supported"
+    },
+    "transports": {
+      "stdio": "supported",
+      "streamable-http": "supported",
+      "sse": "deprecated",
+      "websocket": "supported"
+    },
+    "authentication": {
+      "none": "supported",
+      "headers": "supported",
+      "bearer": "supported",
+      "oauth": "supported",
+      "oidc": "unknown"
+    }
+  }
+}
