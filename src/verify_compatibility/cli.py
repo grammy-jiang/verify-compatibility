@@ -34,9 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     audit_parser = subparsers.add_parser(
         "audit",
         help="Audit one Agent Skill or MCP server.",
-        description=(
-            "Run deterministic static checks. A passing result is not runtime verification."
-        ),
+        description=("Run deterministic static checks. A passing result is not runtime verification."),
     )
     audit_parser.add_argument("path", type=Path, help="Artifact directory, SKILL.md, or manifest.")
     audit_parser.add_argument(
@@ -152,15 +150,12 @@ def _detect_kind(path: Path) -> ArtifactKind:
         return "skill"
     if absolute.is_file() and absolute.suffix == ".json":
         return "mcp"
-    if absolute.is_dir() and (
-        absolute / "compatibility" / "requirements.json"
-    ).is_file():
+    if absolute.is_dir() and (absolute / "compatibility" / "requirements.json").is_file():
         return "mcp"
     if not absolute.exists():
         raise AuditInputError(f"Artifact path does not exist: {absolute}")
     raise AuditInputError(
-        "Cannot infer artifact kind. Pass --kind skill for an Agent Skill or --kind mcp "
-        "for an MCP server."
+        "Cannot infer artifact kind. Pass --kind skill for an Agent Skill or --kind mcp for an MCP server."
     )
 
 

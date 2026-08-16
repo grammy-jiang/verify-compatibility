@@ -93,9 +93,7 @@ def test_required_resources_retain_incompatible_result_after_supported_tool(tmp_
     assert by_target["github-copilot-cloud-agent"].status is TargetStatus.INCOMPATIBLE
     assert by_target["codex-local"].status is TargetStatus.UNKNOWN
     assert any(
-        finding.code == "MCP003"
-        and finding.targets == ("github-copilot-cloud-agent",)
-        for finding in report.findings
+        finding.code == "MCP003" and finding.targets == ("github-copilot-cloud-agent",) for finding in report.findings
     )
 
 
@@ -110,9 +108,7 @@ def test_oauth_only_is_incompatible_with_copilot_cloud_agent(tmp_path: Path) -> 
     report = audit_mcp(tmp_path)
 
     assert report.static_portability is CompatibilityGrade.INCOMPATIBLE
-    cloud = next(
-        target for target in report.targets if target.target_id == "github-copilot-cloud-agent"
-    )
+    cloud = next(target for target in report.targets if target.target_id == "github-copilot-cloud-agent")
     assert cloud.status is TargetStatus.INCOMPATIBLE
     assert any(finding.code == "MCP008" for finding in report.findings)
 
@@ -352,7 +348,4 @@ def test_portability_grade_covers_all_target_states() -> None:
     assert _mcp_portability_grade([assessment(TargetStatus.SUPPORTED)]) is CompatibilityGrade.PORTABLE
     assert _mcp_portability_grade([assessment(TargetStatus.UNKNOWN)]) is CompatibilityGrade.UNVERIFIED
     assert _mcp_portability_grade([assessment(TargetStatus.DEGRADED)]) is CompatibilityGrade.DEGRADED
-    assert (
-        _mcp_portability_grade([assessment(TargetStatus.INCOMPATIBLE)])
-        is CompatibilityGrade.INCOMPATIBLE
-    )
+    assert _mcp_portability_grade([assessment(TargetStatus.INCOMPATIBLE)]) is CompatibilityGrade.INCOMPATIBLE

@@ -162,12 +162,8 @@ def _validate_skill_standard(data: dict[str, Any], *, source: str) -> None:
         {"required", "optional", "constraints"},
         context=f"{source}.frontmatter",
     )
-    required = _require_unique_string_list(
-        frontmatter.get("required"), context=f"{source}.frontmatter.required"
-    )
-    optional = _require_unique_string_list(
-        frontmatter.get("optional"), context=f"{source}.frontmatter.optional"
-    )
+    required = _require_unique_string_list(frontmatter.get("required"), context=f"{source}.frontmatter.required")
+    optional = _require_unique_string_list(frontmatter.get("optional"), context=f"{source}.frontmatter.optional")
     overlap = sorted(set(required) & set(optional))
     if overlap:
         raise ProfileError(f"Required and optional fields overlap: {', '.join(overlap)}")
@@ -269,9 +265,7 @@ def _validate_skills(value: object, *, context: str) -> None:
         raise ProfileError(f"{context}.discovery must be an object")
     _reject_unknown_keys(discovery, {"project", "user"}, context=f"{context}.discovery")
     for scope in ("project", "user"):
-        paths = _require_unique_string_list(
-            discovery.get(scope), context=f"{context}.discovery.{scope}"
-        )
+        paths = _require_unique_string_list(discovery.get(scope), context=f"{context}.discovery.{scope}")
         for path in paths:
             if not path.strip():
                 raise ProfileError(f"{context}.discovery.{scope} contains an empty path")
@@ -290,9 +284,7 @@ def _validate_skills(value: object, *, context: str) -> None:
     )
     behavior = frontmatter.get("unknown_field_behavior")
     if behavior not in {"rejected", "ignored", "undocumented"}:
-        raise ProfileError(
-            f"{context}.frontmatter.unknown_field_behavior has invalid value {behavior!r}"
-        )
+        raise ProfileError(f"{context}.frontmatter.unknown_field_behavior has invalid value {behavior!r}")
     allowed_tools = frontmatter.get("allowed_tools")
     if not isinstance(allowed_tools, dict):
         raise ProfileError(f"{context}.frontmatter.allowed_tools must be an object")
@@ -301,12 +293,8 @@ def _validate_skills(value: object, *, context: str) -> None:
         {"status", "dialect"},
         context=f"{context}.frontmatter.allowed_tools",
     )
-    _validate_capability_status(
-        allowed_tools.get("status"), context=f"{context}.frontmatter.allowed_tools.status"
-    )
-    _require_non_empty_string(
-        allowed_tools, "dialect", context=f"{context}.frontmatter.allowed_tools"
-    )
+    _validate_capability_status(allowed_tools.get("status"), context=f"{context}.frontmatter.allowed_tools.status")
+    _require_non_empty_string(allowed_tools, "dialect", context=f"{context}.frontmatter.allowed_tools")
 
     _validate_status_map(value.get("features"), context=f"{context}.features")
 
@@ -326,9 +314,7 @@ def _validate_skills(value: object, *, context: str) -> None:
             raise ProfileError(f"Duplicate host marker {literal!r} in {context}")
         seen_literals.add(literal)
 
-    adapters = _require_unique_string_list(
-        value.get("adapter_files"), context=f"{context}.adapter_files"
-    )
+    adapters = _require_unique_string_list(value.get("adapter_files"), context=f"{context}.adapter_files")
     for adapter in adapters:
         path = PurePosixPath(adapter)
         if path.is_absolute() or ".." in path.parts or adapter.endswith("/"):
@@ -400,9 +386,7 @@ def _require_unique_string_list(value: object, *, context: str) -> list[str]:
     return result
 
 
-def _reject_unknown_keys(
-    data: dict[str, Any], allowed: set[str], *, context: str
-) -> None:
+def _reject_unknown_keys(data: dict[str, Any], allowed: set[str], *, context: str) -> None:
     unknown = sorted(set(data) - allowed)
     if unknown:
         raise ProfileError(f"{context} has unknown field(s): {', '.join(unknown)}")

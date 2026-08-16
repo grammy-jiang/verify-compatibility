@@ -27,10 +27,7 @@ def render_text(report: AuditReport) -> str:
     ]
     if report.targets:
         for target in report.targets:
-            lines.append(
-                f"  - {target.target_id}: {target.status.value} "
-                f"(profile reviewed {target.reviewed_at})"
-            )
+            lines.append(f"  - {target.target_id}: {target.status.value} (profile reviewed {target.reviewed_at})")
             for reason in target.reasons:
                 lines.append(f"      {reason}")
     else:
@@ -41,10 +38,7 @@ def render_text(report: AuditReport) -> str:
         for finding in report.findings:
             location = f" [{finding.path}]" if finding.path else ""
             targets = f" ({', '.join(finding.targets)})" if finding.targets else ""
-            lines.append(
-                f"  - {finding.severity.value.upper()} {finding.code}{location}{targets}: "
-                f"{finding.message}"
-            )
+            lines.append(f"  - {finding.severity.value.upper()} {finding.code}{location}{targets}: {finding.message}")
             if finding.remediation:
                 lines.append(f"      Remediation: {finding.remediation}")
     else:

@@ -34,25 +34,14 @@ def _write_skill(
     root.mkdir(parents=True)
     declared_name = root.name if name is None else name
     root.joinpath("SKILL.md").write_text(
-        "---\n"
-        f"name: {declared_name}\n"
-        f"description: {description}\n"
-        f"{extra_frontmatter}"
-        "---\n\n"
-        f"{body}\n",
+        f"---\nname: {declared_name}\ndescription: {description}\n{extra_frontmatter}---\n\n{body}\n",
         encoding="utf-8",
     )
     return root
 
 
 def test_bundled_skill_is_statically_portable() -> None:
-    skill = (
-        Path(__file__).parents[1]
-        / "src"
-        / "verify_compatibility"
-        / "skill"
-        / "verify-compatibility"
-    )
+    skill = Path(__file__).parents[1] / "src" / "verify_compatibility" / "skill" / "verify-compatibility"
 
     report = audit_skill(skill)
 
@@ -230,11 +219,7 @@ def test_optional_field_and_length_validation(tmp_path: Path) -> None:
     skill = _write_skill(
         tmp_path / "invalid-optionals",
         description="x" * 1025,
-        extra_frontmatter=(
-            f"compatibility: {'x' * 501}\n"
-            "license: []\n"
-            "metadata:\n  key: value\n"
-        ),
+        extra_frontmatter=(f"compatibility: {'x' * 501}\nlicense: []\nmetadata:\n  key: value\n"),
     )
 
     report = audit_skill(skill)

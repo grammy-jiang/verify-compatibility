@@ -79,10 +79,7 @@ def audit_skill(path: Path, *, target_ids: list[str] | None = None) -> AuditRepo
             Finding(
                 code="SKILL009",
                 severity=Severity.WARNING,
-                message=(
-                    f"SKILL.md has {line_count} lines, above the recommended "
-                    f"{file_line_limit}-line limit."
-                ),
+                message=(f"SKILL.md has {line_count} lines, above the recommended {file_line_limit}-line limit."),
                 path=str(skill_file),
                 remediation="Move detailed material into focused files under references/.",
             )
@@ -178,9 +175,7 @@ def _parse_skill_file(path: Path) -> tuple[dict[str, Any], str, int]:
         if not isinstance(key_node, yaml.ScalarNode) or not isinstance(key_node.value, str):
             raise AuditInputError("SKILL.md frontmatter keys must be strings")
         if key_node.value in seen:
-            raise AuditInputError(
-                f"SKILL.md frontmatter contains duplicate key {key_node.value!r}"
-            )
+            raise AuditInputError(f"SKILL.md frontmatter contains duplicate key {key_node.value!r}")
         seen.add(key_node.value)
 
     if not all(isinstance(key, str) for key in parsed):
@@ -235,8 +230,7 @@ def _validate_name(
                 code="SKILL004",
                 severity=Severity.ERROR,
                 message=(
-                    f"Invalid skill name {value!r}; use 1-{maximum} lowercase letters, "
-                    "numbers, and single hyphens."
+                    f"Invalid skill name {value!r}; use 1-{maximum} lowercase letters, numbers, and single hyphens."
                 ),
                 path=str(path),
                 remediation="Rename the skill and its directory to the same valid identifier.",
@@ -247,10 +241,7 @@ def _validate_name(
             Finding(
                 code="SKILL005",
                 severity=Severity.ERROR,
-                message=(
-                    f"Skill name {value!r} does not match parent directory "
-                    f"{skill_root.name!r}."
-                ),
+                message=(f"Skill name {value!r} does not match parent directory {skill_root.name!r}."),
                 path=str(path),
                 remediation="Make the frontmatter name and skill-directory name identical.",
             )
@@ -271,10 +262,7 @@ def _validate_description(
             Finding(
                 code="SKILL006",
                 severity=Severity.ERROR,
-                message=(
-                    "The description must be a non-empty string of at most "
-                    f"{maximum} characters."
-                ),
+                message=(f"The description must be a non-empty string of at most {maximum} characters."),
                 path=str(path),
                 remediation="Describe what the skill does and when an agent should use it.",
             )
@@ -290,17 +278,14 @@ def _validate_optional_fields(
     compatibility = frontmatter.get("compatibility")
     compatibility_max = cast(int, constraints["compatibility_max_length"])
     if compatibility is not None and (
-        not isinstance(compatibility, str)
-        or not compatibility.strip()
-        or len(compatibility) > compatibility_max
+        not isinstance(compatibility, str) or not compatibility.strip() or len(compatibility) > compatibility_max
     ):
         findings.append(
             Finding(
                 code="SKILL007",
                 severity=Severity.ERROR,
                 message=(
-                    "The compatibility field must be a non-empty string of at most "
-                    f"{compatibility_max} characters."
+                    f"The compatibility field must be a non-empty string of at most {compatibility_max} characters."
                 ),
                 path=str(path),
             )
@@ -334,9 +319,7 @@ def _validate_optional_fields(
         )
 
     license_value = frontmatter.get("license")
-    if license_value is not None and (
-        not isinstance(license_value, str) or not license_value.strip()
-    ):
+    if license_value is not None and (not isinstance(license_value, str) or not license_value.strip()):
         findings.append(
             Finding(
                 code="SKILL007",
@@ -368,13 +351,9 @@ def _assess_targets(
             existing = marker_support.setdefault(literal, (feature, set()))
             existing[1].add(profile.id)
 
-    matched_markers = {
-        literal: details for literal, details in marker_support.items() if literal in body
-    }
+    matched_markers = {literal: details for literal, details in marker_support.items() if literal in body}
     for literal, (feature, supported_by) in matched_markers.items():
-        unsupported_targets = tuple(
-            profile.id for profile in profiles if profile.id not in supported_by
-        )
+        unsupported_targets = tuple(profile.id for profile in profiles if profile.id not in supported_by)
         if unsupported_targets:
             findings.append(
                 Finding(
@@ -408,8 +387,7 @@ def _assess_targets(
 
     allowed_tools_present = "allowed-tools" in frontmatter
     selected_allowed_tools = {
-        profile.id: cast(dict[str, Any], profile.skills["frontmatter"])["allowed_tools"]
-        for profile in profiles
+        profile.id: cast(dict[str, Any], profile.skills["frontmatter"])["allowed_tools"] for profile in profiles
     }
     dialects = {
         cast(str, cast(dict[str, Any], data)["dialect"])
@@ -417,8 +395,7 @@ def _assess_targets(
         if cast(dict[str, Any], data)["status"] == "supported"
     }
     uncertain_allowed_tools = any(
-        cast(dict[str, Any], data)["status"] != "supported"
-        for data in selected_allowed_tools.values()
+        cast(dict[str, Any], data)["status"] != "supported" for data in selected_allowed_tools.values()
     )
     if allowed_tools_present and (len(dialects) > 1 or uncertain_allowed_tools):
         findings.append(
@@ -466,9 +443,7 @@ def _assess_targets(
                 "undocumented": TargetStatus.UNKNOWN,
             }[behavior]
             status = _worse_status(status, candidate)
-            reasons.append(
-                f"Frontmatter field(s) {', '.join(unaccepted)} are {behavior} on this surface."
-            )
+            reasons.append(f"Frontmatter field(s) {', '.join(unaccepted)} are {behavior} on this surface.")
 
         if allowed_tools_present:
             allowed_tools = cast(dict[str, Any], frontmatter_data["allowed_tools"])
@@ -477,9 +452,7 @@ def _assess_targets(
             if support_status == "supported":
                 if len(dialects) > 1:
                     status = _worse_status(status, TargetStatus.DEGRADED)
-                reasons.append(
-                    f"allowed-tools is supported with the {dialect} permission dialect."
-                )
+                reasons.append(f"allowed-tools is supported with the {dialect} permission dialect.")
             elif support_status == "unknown":
                 status = _worse_status(status, TargetStatus.UNKNOWN)
                 reasons.append("allowed-tools support is not established on this surface.")

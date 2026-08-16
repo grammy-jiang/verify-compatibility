@@ -45,8 +45,7 @@ def audit_mcp(
             message="No MCP requirements manifest was found.",
             path=str(artifact_path),
             remediation=(
-                "Add compatibility/requirements.json, pass --manifest, or wait for the "
-                "runtime-introspection phase."
+                "Add compatibility/requirements.json, pass --manifest, or wait for the runtime-introspection phase."
             ),
         )
         targets = [
@@ -146,13 +145,9 @@ def _validate_manifest(data: dict[str, Any], path: Path) -> dict[str, list[str]]
     allowed_top_level = {"schema_version", "artifact", "name", "capabilities"}
     unknown_top_level = sorted(set(data) - allowed_top_level)
     if unknown_top_level:
-        raise AuditInputError(
-            f"Unknown top-level field(s) in {path}: {', '.join(unknown_top_level)}"
-        )
+        raise AuditInputError(f"Unknown top-level field(s) in {path}: {', '.join(unknown_top_level)}")
     if data.get("schema_version") != 1:
-        raise AuditInputError(
-            f"Unsupported or missing schema_version in {path}; expected integer 1"
-        )
+        raise AuditInputError(f"Unsupported or missing schema_version in {path}; expected integer 1")
     if data.get("artifact") != "mcp-server":
         raise AuditInputError("Manifest artifact must be the string 'mcp-server'")
     name = data.get("name")
@@ -169,9 +164,7 @@ def _validate_manifest(data: dict[str, Any], path: Path) -> dict[str, list[str]]
     }
     unknown_categories = sorted(set(raw_capabilities) - set(vocabulary))
     if unknown_categories:
-        raise AuditInputError(
-            f"Unknown capabilities field(s): {', '.join(unknown_categories)}"
-        )
+        raise AuditInputError(f"Unknown capabilities field(s): {', '.join(unknown_categories)}")
 
     result: dict[str, list[str]] = {}
     for category, allowed in vocabulary.items():
@@ -181,14 +174,10 @@ def _validate_manifest(data: dict[str, Any], path: Path) -> dict[str, list[str]]
         entries = cast(list[str], value)
         duplicates = sorted({item for item in entries if entries.count(item) > 1})
         if duplicates:
-            raise AuditInputError(
-                f"capabilities.{category} contains duplicate values: {', '.join(duplicates)}"
-            )
+            raise AuditInputError(f"capabilities.{category} contains duplicate values: {', '.join(duplicates)}")
         unknown = sorted(set(entries) - allowed)
         if unknown:
-            raise AuditInputError(
-                f"Unknown capabilities.{category} value(s): {', '.join(unknown)}"
-            )
+            raise AuditInputError(f"Unknown capabilities.{category} value(s): {', '.join(unknown)}")
         result[category] = entries
     if not any(result.values()):
         raise AuditInputError("Manifest must declare at least one capability")
@@ -275,16 +264,10 @@ def _evaluate_required_capability(
             Finding(
                 code="MCP005" if capability_status == "deprecated" else "MCP004",
                 severity=Severity.WARNING,
-                message=(
-                    f"{target.label} marks required {category} {capability!r} as "
-                    f"{capability_status}."
-                ),
+                message=(f"{target.label} marks required {category} {capability!r} as {capability_status}."),
                 path=str(manifest),
                 targets=(target.id,),
-                remediation=(
-                    "Prefer a fully supported capability, or define and test the accepted "
-                    "degraded behavior."
-                ),
+                remediation=("Prefer a fully supported capability, or define and test the accepted degraded behavior."),
             ),
         )
     if capability_status in _UNAVAILABLE_CAPABILITY_STATUSES:
@@ -294,10 +277,7 @@ def _evaluate_required_capability(
             Finding(
                 code="MCP003",
                 severity=Severity.ERROR,
-                message=(
-                    f"{target.label} cannot provide required {category} {capability!r} "
-                    f"({capability_status})."
-                ),
+                message=(f"{target.label} cannot provide required {category} {capability!r} ({capability_status})."),
                 path=str(manifest),
                 targets=(target.id,),
                 remediation="Remove the requirement, provide a degraded mode, or exclude the target.",
@@ -310,18 +290,14 @@ def _evaluate_required_capability(
             Finding(
                 code="MCP004",
                 severity=Severity.WARNING,
-                message=(
-                    f"Support for required {category} {capability!r} is unknown on "
-                    f"{target.label}."
-                ),
+                message=(f"Support for required {category} {capability!r} is unknown on {target.label}."),
                 path=str(manifest),
                 targets=(target.id,),
                 remediation="Refresh the official profile or collect target-specific runtime evidence.",
             ),
         )
     raise AuditInputError(
-        f"Profile {target.id} has invalid MCP status {capability_status!r} "
-        f"for {category} {capability}"
+        f"Profile {target.id} has invalid MCP status {capability_status!r} for {category} {capability}"
     )
 
 
@@ -340,26 +316,16 @@ def _combine_alternative_category(
 
     support_map = cast(dict[str, str], profile.mcp[category])
     observed = {option: support_map.get(option, "unknown") for option in offered}
-    supported = sorted(
-        option for option, capability_status in observed.items() if capability_status == "supported"
-    )
-    deprecated = sorted(
-        option for option, capability_status in observed.items() if capability_status == "deprecated"
-    )
-    partial = sorted(
-        option for option, capability_status in observed.items() if capability_status == "partial"
-    )
-    unknown = sorted(
-        option for option, capability_status in observed.items() if capability_status == "unknown"
-    )
+    supported = sorted(option for option, capability_status in observed.items() if capability_status == "supported")
+    deprecated = sorted(option for option, capability_status in observed.items() if capability_status == "deprecated")
+    partial = sorted(option for option, capability_status in observed.items() if capability_status == "partial")
+    unknown = sorted(option for option, capability_status in observed.items() if capability_status == "unknown")
 
     if supported:
         reasons.append(f"Offered {category} have a supported option: {', '.join(supported)}.")
         return current
     if deprecated:
-        reasons.append(
-            f"Only deprecated {category} options are usable: {', '.join(deprecated)}."
-        )
+        reasons.append(f"Only deprecated {category} options are usable: {', '.join(deprecated)}.")
         findings.append(
             Finding(
                 code="MCP005",
@@ -380,10 +346,7 @@ def _combine_alternative_category(
                 message=f"{profile.label} only partially supports offered {category}.",
                 path=str(manifest),
                 targets=(profile.id,),
-                remediation=(
-                    "Declare a fully supported alternative or define and test the accepted "
-                    "partial behavior."
-                ),
+                remediation=("Declare a fully supported alternative or define and test the accepted partial behavior."),
             )
         )
         return _worse_status(current, TargetStatus.DEGRADED)

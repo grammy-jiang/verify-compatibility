@@ -11,11 +11,7 @@ from verify_compatibility.cli import main
 def _write_minimal_skill(root: Path, *, body: str = "Run the check.") -> Path:
     root.mkdir()
     root.joinpath("SKILL.md").write_text(
-        "---\n"
-        f"name: {root.name}\n"
-        "description: Run a check. Use when checking behavior.\n"
-        "---\n\n"
-        f"{body}\n",
+        f"---\nname: {root.name}\ndescription: Run a check. Use when checking behavior.\n---\n\n{body}\n",
         encoding="utf-8",
     )
     return root
@@ -90,9 +86,7 @@ def test_profiles_text_and_version(capsys: pytest.CaptureFixture[str]) -> None:
     assert exc_info.value.code == 0
 
 
-def test_audit_json_auto_detects_mcp_manifest(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_audit_json_auto_detects_mcp_manifest(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     manifest = tmp_path / "requirements.json"
     manifest.write_text(
         json.dumps(
@@ -115,9 +109,7 @@ def test_audit_json_auto_detects_mcp_manifest(
     assert report["artifact"]["kind"] == "mcp-server"
 
 
-def test_explicit_kind_reports_invalid_artifact(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_explicit_kind_reports_invalid_artifact(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     wrong = tmp_path / "README.md"
     wrong.write_text("text", encoding="utf-8")
 
@@ -125,9 +117,7 @@ def test_explicit_kind_reports_invalid_artifact(
     assert "Expected SKILL.md" in capsys.readouterr().err
 
 
-def test_missing_path_is_a_usage_error(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_missing_path_is_a_usage_error(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["audit", str(tmp_path / "missing")]) == 2
     assert "does not exist" in capsys.readouterr().err
 
