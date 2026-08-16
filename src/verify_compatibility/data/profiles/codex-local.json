@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "id": "codex-local",
+  "label": "Codex local host",
+  "vendor": "OpenAI",
+  "surface": "shared-local-configuration",
+  "reviewed_at": "2026-08-16",
+  "sources": [
+    {
+      "id": "codex-skills",
+      "title": "Build skills",
+      "url": "https://developers.openai.com/codex/build-skills",
+      "covers": [
+        "skills",
+        "skills.discovery",
+        "skills.adapters"
+      ]
+    },
+    {
+      "id": "codex-mcp",
+      "title": "Model Context Protocol",
+      "url": "https://developers.openai.com/codex/extend/mcp",
+      "covers": [
+        "mcp.features",
+        "mcp.transports",
+        "mcp.authentication"
+      ]
+    }
+  ],
+  "skills": {
+    "supported": true,
+    "discovery": {
+      "project": [
+        ".agents/skills"
+      ],
+      "user": [
+        "~/.agents/skills"
+      ]
+    },
+    "frontmatter": {
+      "additional_fields": [],
+      "unknown_field_behavior": "undocumented",
+      "allowed_tools": {
+        "status": "unknown",
+        "dialect": "agent-skills-experimental"
+      }
+    },
+    "features": {
+      "explicit-invocation": "supported",
+      "implicit-invocation": "supported"
+    },
+    "host_markers": [],
+    "adapter_files": [
+      "agents/openai.yaml"
+    ]
+  },
+  "mcp": {
+    "features": {
+      "tools": "supported",
+      "resources": "unknown",
+      "prompts": "unknown",
+      "server-instructions": "supported",
+      "elicitation": "unknown"
+    },
+    "transports": {
+      "stdio": "supported",
+      "streamable-http": "supported",
+      "sse": "unsupported",
+      "websocket": "unsupported"
+    },
+    "authentication": {
+      "none": "supported",
+      "headers": "supported",
+      "bearer": "supported",
+      "oauth": "supported",
+      "oidc": "unknown"
+    }
+  }
+}
