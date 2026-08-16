@@ -124,7 +124,7 @@ def _handle_audit(args: argparse.Namespace) -> int:
 
 
 def _handle_skill_path(_args: argparse.Namespace) -> int:
-    resource = files("verify_compatibility").joinpath("skill", "verify-compatibility")
+    resource = files("verify_compatibility").joinpath("skill").joinpath("verify-compatibility")
     if not resource.is_dir():
         raise AuditInputError("The bundled verify-compatibility Agent Skill is missing")
     print(resource)

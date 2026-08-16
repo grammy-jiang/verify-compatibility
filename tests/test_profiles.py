@@ -97,7 +97,7 @@ def test_select_profiles_rejects_unknown_and_duplicates() -> None:
 
 
 def test_bundled_skill_is_packaged_under_matching_directory() -> None:
-    skill = files("verify_compatibility").joinpath("skill", "verify-compatibility")
+    skill = files("verify_compatibility").joinpath("skill").joinpath("verify-compatibility")
 
     assert skill.is_dir()
     assert skill.joinpath("SKILL.md").is_file()

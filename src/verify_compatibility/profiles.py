@@ -74,7 +74,7 @@ class TargetProfile:
 
 
 def _load_json_resource(group: str, name: str) -> dict[str, Any]:
-    resource = files("verify_compatibility").joinpath("data", group, name)
+    resource = files("verify_compatibility").joinpath("data").joinpath(group).joinpath(name)
     try:
         raw = resource.read_text(encoding="utf-8")
     except (FileNotFoundError, OSError, UnicodeError) as exc:
@@ -100,7 +100,7 @@ def load_skill_standard() -> dict[str, Any]:
 def load_profiles() -> tuple[TargetProfile, ...]:
     """Load every bundled target profile in deterministic order."""
 
-    directory = files("verify_compatibility").joinpath("data", "profiles")
+    directory = files("verify_compatibility").joinpath("data").joinpath("profiles")
     result: list[TargetProfile] = []
     seen: set[str] = set()
     for resource in sorted(directory.iterdir(), key=lambda item: item.name):
@@ -316,8 +316,8 @@ def _validate_skills(value: object, *, context: str) -> None:
 
     adapters = _require_unique_string_list(value.get("adapter_files"), context=f"{context}.adapter_files")
     for adapter in adapters:
-        path = PurePosixPath(adapter)
-        if path.is_absolute() or ".." in path.parts or adapter.endswith("/"):
+        adapter_path = PurePosixPath(adapter)
+        if adapter_path.is_absolute() or ".." in adapter_path.parts or adapter.endswith("/"):
             raise ProfileError(f"{context}.adapter_files contains unsafe path {adapter!r}")
 
 
