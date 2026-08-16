@@ -61,6 +61,7 @@ include = [
   "/README.md",
   "/AGENTS.md",
   "/CLAUDE.md",
+  "/LICENSE",
   "/pyproject.toml",
 ]
 
@@ -83,7 +84,7 @@ exclude_also = [
 ]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py310"
 
 [tool.ruff.lint]
@@ -91,6 +92,7 @@ select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["E501"]
+"tests/test_skill_audit.py" = ["RUF043"]
 
 [tool.mypy]
 python_version = "3.10"
